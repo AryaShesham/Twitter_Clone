@@ -5,29 +5,9 @@
 
 
 {% block body%}
-<link rel="stylesheet" href="{% static 'base.css' %}">
-<!-- {% include 'landing/navbar.html' %} -->
-<div class="container">
-    <!-- option menu -->
-    <div class="options-menu">
-        <div class="options-center">
-            <div class="logo">
-                <i class="fa fa-twitter"></i>
-            </div>
-            <div class="option">
-                <div><a href="{%url 'post-list'%}"><i class="icon-home-solid"></i>Home</a></div>
-                <div><a href=""><i class="icon-hashtag-solid"></i>Explore</a></div>
-                <div><a href=""><i class="fa fa-bell"></i>Notifications</a></div>
-                <div><a href=""><i class="fa fa-envelope-o"></i>Messages</a></div>
-                <div><a href=""><i class="fa fa-bookmark-o"></i>Bookmarks</a></div>
-                <div><a href=""><i class="fa fa-list-alt"></i>Lists</a></div>
-                <div><a href="{% url 'profile' request.user.profile.pk %}"><i class="fa fa-user-o"></i>Profile</a></div>
-                <div><a href=""><i class="icon-ellipsis-h-solid"></i>More</a></div>
-                <div><button>Tweet</button></div>
-            </div>
-        </div>
-    </div>
-    <!-- End of option menu -->
+<!-- option menu -->
+{% include 'landing/navbar.html' %}
+<!-- End of option menu -->
 
     <!-- Content Menu -->
     <div class="content-menu">
