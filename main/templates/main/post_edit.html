@@ -1,0 +1,119 @@
+{% extends 'landing/base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block body%}
+<link rel="stylesheet" href="{% static 'base.css' %}">
+<!-- {% include 'landing/navbar.html' %} -->
+<div class="container">
+    <!-- option menu -->
+    <div class="options-menu">
+        <div class="options-center">
+            <div class="logo">
+                <i class="fa fa-twitter"></i>
+            </div>
+            <div class="option">
+                <div><a href="{%url 'post-list'%}"><i class="icon-home-solid"></i>Home</a></div>
+                <div><a href=""><i class="icon-hashtag-solid"></i>Explore</a></div>
+                <div><a href=""><i class="fa fa-bell"></i>Notifications</a></div>
+                <div><a href=""><i class="fa fa-envelope-o"></i>Messages</a></div>
+                <div><a href=""><i class="fa fa-bookmark-o"></i>Bookmarks</a></div>
+                <div><a href=""><i class="fa fa-list-alt"></i>Lists</a></div>
+                <div><a href="{% url 'profile' user.profile.pk %}"><i class="fa fa-user-o"></i>Profile</a></div>
+                <div><a href=""><i class="icon-ellipsis-h-solid"></i>More</a></div>
+                <div><button>Tweet</button></div>
+            </div>
+        </div>
+    </div>
+    <!-- End of option menu -->
+
+    <!-- Content Menu -->
+    <div class="content-menu">
+        <div class="prefer">
+            <span>
+                <a class="btn" style="color:rgb(0, 97, 153); font-family:monospace;" href="{% url 'post-detail' object.pk%}">Back to Post</a>
+            </span>
+            <span>
+                <i class="fa fa-star-o"></i>
+            </span>
+        </div>
+
+        <div class="you-tweet-other-tweet">
+            <div class="your-tweet">
+                <div class="profile-message">
+                    <span><img src="" alt=""></span>
+                    <form method="POST" style="position: relative; z-index: 9999;">
+                        {% csrf_token %}
+                        {{ form|crispy}}
+                </div>
+                <div class="add-extra">
+                    <div class="images-more">
+                        <span><a href=""><i class="far fa-image"></i></a></span>
+                        <span><a href=""><i class="fas fa-poll-h"></i></a></span>
+                        <span><a href=""><i class="far fa-smile"></i></a></span>
+                        <span><a href=""><i class="far fa-calendar-plus"></i></a></span>
+                    </div>
+                    <span style="position: relative; z-index: 9999;"><button>Tweet</button></span>
+                </div>
+                </form>
+            </div>
+            <div class="others-tweets">
+
+                <!-- Each person -->
+
+                <!-- End of Each person -->
+
+            </div>
+        </div>
+        </div>
+    <!-- End of Content Menu -->
+
+    <!-- Trending Menu -->
+    <div class="trending-menu">
+        <div class="trending-center">
+            <div class="search">
+                <input type="search" placeholder="Search Twitter">
+                <span><i class="fa fa-search"></i></span>
+            </div>
+
+            <div class="trending">
+                <div class="header">
+                    <p>What's happening</p>
+                </div>
+                <div class="trends">
+                    <!-- Each Trend -->
+                    <div class="trend">
+                        <div class="trend-msg">
+                            <div class="trend-name">
+                                <p>IPL 2020.live</p>
+                            </div>
+                            <div class="subject">
+                                <p>IPL: aaaaaaaaaaaaaaaaaaaaaaaa</p>
+                            </div>
+                            <div class="trendk-with">
+                                <p>trending with <a href="">#MIvsRCB</a>,<a href="">#SRHvsDC</a></p>
+                            </div>
+                        </div>
+                        <div class="trend-picture">
+                            <img src=" " alt="">
+                        </div>
+                    </div>
+                    <div class="show-more">
+                        <a href="">Show more</a>
+                    </div>
+                    <!-- End of Each Trend -->
+                </div>
+            </div>
+
+            <!-- Follow -->
+
+            <!-- End of Follow -->
+
+        </div>
+    </div>
+    <!-- End of Trending Menu -->
+
+</div>
+{% endblock body %}

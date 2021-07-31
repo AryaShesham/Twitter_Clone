@@ -1,0 +1,27 @@
+{% load custom_tags %}
+<div class="container">
+    <!-- option menu -->
+    <div class="options-menu">
+        <div class="options-center">
+            <div class="logo">
+                <i class="fa fa-twitter"></i>
+            </div>
+            <div class="option">
+                <div><a href="{%url 'post-list'%}"><i class="icon-home-solid"></i><span>Home</span></a></div>
+                <div><a href=""><i class="icon-hashtag-solid"></i><span>Explore</span></a></div>
+                <div><a href=""><i class="fa fa-bell"></i><span>Notifications</span></a></div>
+                <div><a href=""><i class="fa fa-envelope-o"></i><span>Messages</span></a></div>
+                <div><a href=""><i class="fa fa-bookmark-o"></i><span>Bookmarks</span></a></div>
+                <div><a href=""><i class="fa fa-list-alt"></i><span>Lists</span></a></div>
+                <div><a href="{% url 'profile' request.user.profile.pk %}"><i
+                            class="fa fa-user-o"></i><span>Profile</span></a>
+                </div>
+                <div><a href=""><i class="icon-ellipsis-h-solid"></i><span>More</span></a></div>
+
+                <div><button>Tweet</button></div>
+                <div class="notification" style="position:absolute;top: 173px;left: 33px;">{% show_notifications %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of option menu -->

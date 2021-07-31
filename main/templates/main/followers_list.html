@@ -1,0 +1,131 @@
+{% extends 'landing/base.html' %}
+
+{% load static %}
+
+
+{% block body%}
+
+
+<!-- option menu -->
+{% include 'landing/navbar.html' %}
+<!-- End of option menu -->
+<!-- Content Menu -->
+<div class="content-menu">
+    <div class="prefer">
+        <span>
+            {% if profile.name %}
+            <a href="{%url 'profile' profile.pk%}"><i class="fas fa-arrow-left me-4 pe-1"></i>{{ profile.name }}</a>
+            {% else %}
+            <a href="{%url 'profile' profile.pk%}"><i class="fas fa-arrow-left me-4 pe-1"></i>{{
+                profile.user.username }}</a>
+            {% endif %}
+            <p class="ms-5 ps-3" style="color: rgb(85, 85, 85); font-size: 14px;">@{{ user.username }}</p>
+        </span>
+        <span>
+            <i class="fa fa-star-o me-3"></i>
+        </span>
+    </div>
+    <div class="you-tweet-other-tweet mx-3  mt-2 mb-5">
+        <h3>Followers:</h3>
+        <hr>
+    </div>
+    <div class="others-tweets">
+        {% for follower in followers %}
+        <!-- Each person -->
+        <div class="other-tweet mt-3">
+            <div>
+                <div class="others-profile profile-msg mx-2 px-1 position-relative" style="margin-top: 5px;">
+                    <img src="{{ follower.profile.picture.url }}" alt="">
+                    <span style="padding-top: 15px">
+                        <div>
+                            <p class="my-0">
+                                <a href="{% url 'profile' follower.profile.pk %}"
+                                    style="text-decoration: none; color:rgb(27, 27, 27); font-weight: 700;">
+                                    {{ follower.profile.name }}</a>
+                            </p>
+                        </div>
+                        <div>
+                            <p>
+                                <a href="{% url 'profile' follower.profile.pk %}"
+                                    style="text-decoration: none; color: rgb(98, 98, 98)">@{{ follower.username }}
+                                </a>
+                            </p>
+                        </div>
+                    </span>
+                    <span>
+                        {% if request.user %}
+                        {% if is_following %}
+                        <form method="POST" action="{% url 'remove-follower' profile.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-danger" type="submit">Unfollow</button>
+                        </form>
+                        {% else %}
+                        <form method="POST" action="{% url 'add-follower' profile.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-primary" type="submit">Follow</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+
+
+                    </span>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+    <!-- End of Each person -->
+    {% endfor %}
+</div>
+<!-- End of Content Menu -->
+<!-- Trending Menu -->
+<div class="trending-menu">
+    <div class="trending-center">
+        <form method="GET" action="{% url 'profile-search' %}">
+            <div class="search">
+                <input class="form-control" type="search" placeholder="Search Twitter" name="query"
+                    value="{{ request.GET.query }}">
+                <span class="search-icon"><button
+                        style="border: none; background-color: transparent; box-shadow: none; padding-bottom: 30px;"
+                        type="submit"><i class="fa fa-search"></i></button></span>
+            </div>
+        </form>
+        <div class="trending">
+            <div class="header">
+                <p>What's happening</p>
+            </div>
+            <div class="trends">
+                <!-- Each Trend -->
+                <div class="trend">
+                    <div class="trend-msg">
+                        <div class="trend-name">
+                            <p>IPL 2020.live</p>
+                        </div>
+                        <div class="subject">
+                            <p>IPL: aaaaaaaaaaaaaaaaaaaaaaaa</p>
+                        </div>
+                        <div class="trendk-with">
+                            <p>trending with <a href="">#MIvsRCB</a>,<a href="">#SRHvsDC</a></p>
+                        </div>
+                    </div>
+                    <div class="trend-picture">
+                        <img src=" " alt="">
+                    </div>
+                </div>
+                <div class="show-more">
+                    <a href="">Show more</a>
+                </div>
+                <!-- End of Each Trend -->
+            </div>
+        </div>
+        <!-- Follow -->
+        <!-- End of Follow -->
+    </div>
+</div>
+<!-- End of Trending Menu -->
+
+</div>
+{% endblock body %}

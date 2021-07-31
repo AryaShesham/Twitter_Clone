@@ -1,0 +1,12 @@
+body {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.showcase {
+  float: left;
+  background: url(/static/pics/1.png);
+  width: 54%;
+  height: 88%;
+}

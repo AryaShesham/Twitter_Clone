@@ -1,0 +1,26 @@
+{% extends 'landing/base.html' %}
+
+{% block body %}
+<div class="container">
+    <div class="prefer"
+        style="margin-left: 384px; margin-right: 373px; margin-top: 10px; padding-bottom: 20px; border-bottom: 2px solid #afafaf;">
+        <span><a href="{%url 'post-list'%}"><i class="fas fa-arrow-left me-3 pe-1"
+                    style="color: #58a5e4;"></i></a></span>
+        <span>
+            <a href="{%url 'post-list'%}" style="text-decoration: none; color:black; font-weight: 700;">Back to Home</a>
+        </span>
+    </div>
+    {% for profile in profile_list %}
+    <div class="row justify-content-center mt-3">
+        <div class="col-md-5 col-sm-12 border-bottom position-relative">
+            <p><a style="text-decoration: none;" class="text-primary" href="{% url 'profile' profile.pk %}">
+                    @{{ profile.user }}</a></p>
+            {% if profile.location %}
+            <p>{{ profile.location }}</p>
+            {% endif %}
+            <p>Followers: {{ profile.followers.all.count }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock body %}

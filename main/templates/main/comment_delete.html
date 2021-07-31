@@ -1,0 +1,102 @@
+{% extends 'landing/base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block body%}
+<!-- option menu -->
+{% include 'landing/navbar.html' %}
+<!-- End of option menu -->
+
+<!-- Content Menu -->
+<div class="content-menu">
+    <div class="prefer">
+        <span>
+            <a class="btn" style="color:rgb(0, 97, 153); font-family:monospace;"
+                href="{% url 'post-detail' object.post.pk %}">Back to Post</a>
+        </span>
+        <span>
+            <i class="fa fa-star-o"></i>
+        </span>
+    </div>
+
+    <div class="you-tweet-other-tweet">
+        <div class="your-tweet">
+            <div class="profile-message justify-content-center text-center">
+
+                <form method="POST" style="position: relative; z-index: 9999;">
+                    {% csrf_token %}
+                    <h5>Are You Sure ?</h5>
+                    <p>You're about to delete the comment. This can't be undone.</p>
+
+            </div>
+            <div class="add-extra justify-content-center">
+                <span style="position: relative; z-index: 9999;"><button>Delete</button></span>
+            </div>
+            </form>
+        </div>
+        <div class="others-tweets">
+
+            <!-- Each person -->
+
+            <!-- End of Each person -->
+
+        </div>
+    </div>
+</div>
+<!-- End of Content Menu -->
+
+<!-- Trending Menu -->
+<div class="trending-menu">
+    <div class="trending-center">
+        <form method="GET" action="{% url 'profile-search' %}">
+            <div class="search">
+
+                <input class="form-control" type="search" placeholder="Search Twitter" name="query"
+                    value="{{ request.GET.query }}">
+                <span class="search-icon"><button
+                        style="border: none; background-color: transparent; box-shadow: none; padding-bottom: 30px;"
+                        type="submit"><i class="fa fa-search"></i></button></span>
+            </div>
+        </form>
+
+        <div class="trending">
+            <div class="header">
+                <p>What's happening</p>
+            </div>
+            <div class="trends">
+                <!-- Each Trend -->
+                <div class="trend">
+                    <div class="trend-msg">
+                        <div class="trend-name">
+                            <p>IPL 2020.live</p>
+                        </div>
+                        <div class="subject">
+                            <p>IPL: aaaaaaaaaaaaaaaaaaaaaaaa</p>
+                        </div>
+                        <div class="trendk-with">
+                            <p>trending with <a href="">#MIvsRCB</a>,<a href="">#SRHvsDC</a></p>
+                        </div>
+                    </div>
+                    <div class="trend-picture">
+                        <img src=" " alt="">
+                    </div>
+                </div>
+                <div class="show-more">
+                    <a href="">Show more</a>
+                </div>
+                <!-- End of Each Trend -->
+            </div>
+        </div>
+
+        <!-- Follow -->
+
+        <!-- End of Follow -->
+
+    </div>
+</div>
+<!-- End of Trending Menu -->
+
+</div>
+{% endblock body %}

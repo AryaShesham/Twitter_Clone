@@ -1,0 +1,187 @@
+{% extends 'landing/base.html' %}
+
+{% load static %}
+
+
+{% block body%}
+<!-- option menu -->
+{% include 'landing/navbar.html' %}
+<!-- End of option menu -->
+
+<!-- Content Menu -->
+<div class="content-menu">
+  <div class="prefer">
+    <span>
+      <a href="{%url 'post-list'%}"><i class="fas fa-arrow-left me-4 pe-1"></i>{{ profile.name }}</a>
+      <p class="ms-5 ps-3" style="color: rgb(85, 85, 85); font-size: 14px;">{{ posts.all.count }} Tweets</p>
+    </span>
+    <span>
+      <i class="fa fa-star-o me-3"></i>
+    </span>
+  </div>
+  <div class="you-tweet-other-tweet">
+    <div>
+      <img src="{{ profile.cover.url }}" style="height: 200px; width: 604px;">
+      <img src="{{ profile.picture.url }}" class="rounded-circle" width="140" height="140"
+        style="position: absolute;margin-top:0;top: -200;top: -200;bottom: 0px;border: 4px solid white;top: 185px;left: 12px;" />
+      {% if request.user == user %}
+      <span>
+        <a href="{% url 'profile-edit' profile.pk %}" class="btn"
+          style="position: absolute;bottom: 1325px;right: 20px;background: transparent;border: 1px solid #00a7ff;padding-inline: 15px; padding-top: 8px; padding-bottom: 8px; border-radius: 20px; color: #00a7ff; font-weight: 700 ;width: 116px; height: 39px; z-index: 5; top: 271px;">Edit
+          profile</a>
+        {% else %}
+        {% if is_following %}
+        <form method="POST" action="{% url 'remove-follower' profile.pk %}">
+          {% csrf_token %}
+          <button class="btn btn-outline-danger" type="submit"
+            style="position: absolute;bottom: 1325px;right: 20px;background: transparent;border: 1px solid #00a7ff;padding-inline: 15px; padding-top: 8px; padding-bottom: 8px; border-radius: 20px; color: #00a7ff; font-weight: 700 ;width: 116px; height: 39px; z-index: 5; top: 271px;">Unfollow</button>
+        </form>
+        {% else %}
+        <form method="POST" action="{% url 'add-follower' profile.pk %}">
+          {% csrf_token %}
+          <button class="btn btn-outline-primary" type="submit"
+            style="position: absolute;bottom: 1325px;right: 20px;background: transparent;border: 1px solid #00a7ff;padding-inline: 15px; padding-top: 8px; padding-bottom: 8px; border-radius: 20px; color: #00a7ff; font-weight: 700 ;width: 116px; height: 39px; z-index: 5; top: 271px;">Follow</button>
+        </form>
+        {% endif %}
+      </span>
+      {% endif %}
+      <div class="your-tweet card shadow-sm ps-3" style="background: transparent; border: none;">
+        {% if profile.name %}
+        <h4 class="mt-5 pt-4">{{ profile.name }}</h4>
+        {% else %}
+        <h4>{{ user.username }}</h4>
+        {% endif %}
+        <p>@{{ user.username }}</p>
+        <div class="prefer1">
+          <span>
+            {% if profile.location %}
+            <p><i class="fas fa-map-marker-alt" style="color: rgb(142, 143, 143);"></i> {{ profile.location }}</p>
+            {% endif %}
+          </span>
+          <span>
+            {% if profile.birth_date %}
+            <p class="mx-5"><i class="fas fa-calendar-alt" style="color: rgb(142, 143, 143);"></i>
+              {{ profile.birth_date }}</p>
+            {% endif %}
+          </span>
+        </div>
+
+        {% if profile.bio %}
+        <p>{{ profile.bio }}</p>
+        {% endif %}
+
+        <div class="mb-3">
+          <a href="{% url 'followers-list' profile.pk %}" style="text-decoration: none; color: rgb(99, 98, 98);"><strong
+              style="color: black;">
+              {{ number_of_followers }} </strong> Followers</a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="others-tweets">
+      {% for post in posts %}
+      <!-- Each person -->
+      <div class="other-tweet mt-3">
+        <div>
+          <div class="others-profile profile-msg mx-2 px-1" style="margin-top: 5px;">
+            <img src="{{ profile.picture.url }}" alt="">
+            <span style="padding-top: 15px">
+              <p><a href="{% url 'profile' post.author.pk %}" style="text-decoration: none; color: rgb(98, 98, 98)">
+                  @{{ post.author }} . </a>
+                <a href="{% url 'post-detail' post.pk %}"
+                  style="text-decoration: none; color:rgb(98, 98, 98);">{{post.created_on}}</a>
+              </p>
+            </span>
+            <i class="fa fa-ellipsis-h ms-3"></i>
+          </div>
+          <div class="name-msg mx-1">
+            <div class="msg position-relative">
+              <p>{{ post.body }}</p>
+              <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+            </div>
+          </div>
+          <div class="more-options">
+
+          </div>
+        </div>
+        <div class="image-video">
+          <img src="" alt="">
+        </div>
+        <div class="your-reaction">
+          <div class="comment"><i class="fa fa-comment-o"></i></div>
+          <div class="retweet" style="display: flex !important;"><i class="fa fa-retweet"></i></div>
+          <div class="like">
+            <form method="POST" action="{% url 'like' post.pk %}">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <button type="submit" style="background-color: transparent; border: none; box-shadow: none;">
+                <i class="like fa fa-heart-o"></i>
+                <span>{{ post.likes.all.count }} </span>
+              </button>
+            </form>
+          </div>
+          <div class="bookmark"><i class="fa fa-upload"></i></div>
+        </div>
+
+      </div>
+      <!-- End of Each person -->
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+<!-- End of Content Menu -->
+<!-- Trending Menu -->
+<div class="trending-menu">
+  <div class="trending-center">
+    <form method="GET" action="{% url 'profile-search' %}">
+      <div class="search">
+
+        <input class="form-control" type="search" placeholder="Search Twitter" name="query"
+          value="{{ request.GET.query }}">
+        <span class="search-icon"><button
+            style="border: none; background-color: transparent; box-shadow: none; padding-bottom: 30px;"
+            type="submit"><i class="fa fa-search"></i></button></span>
+      </div>
+    </form>
+
+    <div class="trending">
+      <div class="header">
+        <p>What's happening</p>
+      </div>
+      <div class="trends">
+        <!-- Each Trend -->
+        <div class="trend">
+          <div class="trend-msg">
+            <div class="trend-name">
+              <p>IPL 2020.live</p>
+            </div>
+            <div class="subject">
+              <p>IPL: aaaaaaaaaaaaaaaaaaaaaaaa</p>
+            </div>
+            <div class="trendk-with">
+              <p>trending with <a href="">#MIvsRCB</a>,<a href="">#SRHvsDC</a></p>
+            </div>
+          </div>
+          <div class="trend-picture">
+            <img src=" " alt="">
+          </div>
+        </div>
+        <div class="show-more">
+          <a href="">Show more</a>
+        </div>
+        <!-- End of Each Trend -->
+      </div>
+    </div>
+
+    <!-- Follow -->
+
+    <!-- End of Follow -->
+
+  </div>
+</div>
+<!-- End of Trending Menu -->
+
+</div>
+{% endblock body %}

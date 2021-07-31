@@ -1,0 +1,174 @@
+{% extends 'landing/base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block body%}
+
+<!-- option menu -->
+{% include 'landing/navbar.html' %}
+
+<!-- End of option menu -->
+
+<!-- Content Menu -->
+<div class="content-menu">
+  <div class="prefer">
+    <span>
+      <a href="">Home</a>
+    </span>
+    <span>
+      <i class="fa fa-star-o me-3"></i>
+    </span>
+  </div>
+  <div class="you-tweet-other-tweet">
+    <div class="your-tweet" style="border-bottom: 12px solid #F7F9F9; padding-bottom: 8px;">
+      <div class="profile-message">
+        <span><img src="{{ user.profile.picture.url }}" /></span>
+        <form method="POST" style="position: relative; z-index: 9999;">
+          {% csrf_token %}
+          {{ form|crispy}}
+      </div>
+      <div class="add-extra">
+        <div class="images-more">
+          <span><a href=""><i class="far fa-image"></i></a></span>
+          <span><a href=""><i class="fas fa-poll-h"></i></a></span>
+          <span><a href=""><i class="far fa-smile"></i></a></span>
+          <span><a href=""><i class="far fa-calendar-plus"></i></a></span>
+        </div>
+        <span style="position: relative; z-index: 9999;"><button>Tweet</button></span>
+      </div>
+      </form>
+    </div>
+    <div class="others-tweets">
+      {% for post in post_list %}
+      <!-- Each person -->
+      <div class="other-tweet">
+        <div>
+          <div class="others-profile profile-msg mx-2 px-1" style="margin-top: 5px;">
+            <img src="{{post.author.profile.picture.url }}" alt="">
+            <span style="padding-top: 15px">
+              <p><a style="text-decoration: none; color: rgb(98, 98, 98)" href="{% url 'profile' post.author.pk %}">
+                  @{{post.author}} . </a><a href="{% url 'post-detail' post.pk %}"
+                  style="text-decoration: none; color:rgb(98, 98, 98);">{{post.created_on}}</a></p>
+            </span>
+            <i class="fa fa-ellipsis-h ms-3"></i>
+          </div>
+          <div class="name-msg mx-1">
+            <div class="msg position-relative">
+              <p>{{ post.body }}</p>
+              <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+            </div>
+          </div>
+          <div class="more-options">
+
+          </div>
+        </div>
+        <div class="image-video">
+          <img src="" alt="">
+        </div>
+        <div class="your-reaction">
+          <div class="comment"><i class="fa fa-comment-o"></i></div>
+          <div class="retweet" style="display: flex !important;"><i class="fa fa-retweet"></i></div>
+          <div class="like">
+            <form method="POST" action="{% url 'like' post.pk %}">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.path }}">
+              <button type="submit" style="background-color: transparent; border: none; box-shadow: none;">
+                <i class="like fa fa-heart-o"></i>
+                <span>{{ post.likes.all.count }} </span>
+              </button>
+            </form>
+          </div>
+          <div class="bookmark"><i class="fa fa-upload"></i></div>
+        </div>
+
+      </div>
+      <!-- End of Each person -->
+      {% endfor %}
+    </div>
+  </div>
+
+</div>
+<!-- End of Content Menu -->
+<!-- Trending Menu -->
+<div class="trending-menu">
+  <div class="trending-center">
+    <form method="GET" action="{% url 'profile-search' %}">
+      <div class="search">
+
+        <input class="form-control" type="search" placeholder="Search Twitter" name="query"
+          value="{{ request.GET.query }}">
+        <span class="search-icon"><button
+            style="border: none; background-color: transparent; box-shadow: none; padding-bottom: 30px;"
+            type="submit"><i class="fa fa-search"></i></button></span>
+      </div>
+    </form>
+
+    <div class="trending">
+      <div class="header">
+        <p>What's happening</p>
+      </div>
+      <div class="trends">
+        <!-- Each Trend -->
+        <div class="trend">
+          <div class="trend-msg">
+            <div class="trend-name">
+              <p>IPL 2020.live</p>
+            </div>
+            <div class="subject">
+              <p>IPL: aaaaaaaaaaaaaaaaaaaaaaaa</p>
+            </div>
+            <div class="trendk-with">
+              <p>trending with <a href="">#MIvsRCB</a>,<a href="">#SRHvsDC</a></p>
+            </div>
+          </div>
+          <div class="trend-picture">
+            <img src=" " alt="">
+          </div>
+        </div>
+        <div class="show-more">
+          <a href="">Show more</a>
+        </div>
+        <!-- End of Each Trend -->
+      </div>
+    </div>
+
+    <!-- Follow -->
+    <div class="follow">
+      <div class="header">
+        <p>Who to follow</p>
+      </div>
+    </div>
+    <div class="persons">
+      <!-- Each person -->
+      <div class="person">
+
+        <div class="person-profile">
+          <img src="..." alt="">
+        </div>
+        <div class="name">
+          <div class="main-name">
+            <h3>Name</h3>
+          </div>
+          <div class="username">
+            <p>@name</p>
+          </div>
+        </div>
+        <div class="send-follow-request">
+          <button>Follow</button>
+        </div>
+      </div>
+      <!-- End of Each Person -->
+    </div>
+    <div class="show-more">
+      <a href="">Show More</a>
+    </div>
+
+    <!-- End of Follow -->
+
+  </div>
+</div>
+<!-- End of Trending Menu -->
+
+</div>
+{% endblock body %}

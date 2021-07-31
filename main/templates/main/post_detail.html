@@ -1,0 +1,320 @@
+{% extends 'landing/base.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+
+{% block body%}
+<!-- option menu -->
+{% include 'landing/navbar.html' %}
+<!-- End of option menu -->
+
+<!-- Content Menu -->
+<div class="content-menu">
+    <div class="prefer">
+        <span>
+            <a class="btn" style="color:rgb(0, 97, 153); font-family:monospace;" href="{% url 'post-list'%}">Back to
+                Feed</a>
+        </span>
+        <span>
+            <i class="fa fa-star-o me-3"></i>
+        </span>
+    </div>
+
+    <!-- Tweet -->
+    <div class="other-tweet">
+        <div>
+            <div class="others-profile profile-msg mx-2 px-1" style="margin-top: 5px;">
+                <img src="{{ post.author.profile.picture.url }}">
+                <span style="padding-top: 15px">
+                    <p><a style="text-decoration: none; color: rgb(98, 98, 98)"
+                            href="{% url 'profile' post.author.pk %}">@{{ post.author }} .
+                        </a><a href="{% url 'post-detail' post.pk %}"
+                            style="text-decoration: none; color:rgb(98, 98, 98);">{{post.created_on}}</a></p>
+                </span>
+                <span>
+                    {% if request.user == post.author %}
+
+                    <a class="mx-1" href="{% url 'post-edit' post.pk %}" style="color: blue;"><i
+                            class="far fa-edit"></i></a>
+                    <a class="mx-1 pr-2" href="{% url 'post-delete' post.pk %}" style="color: rgb(207, 21, 21);"><i
+                            class="fas fa-trash"></i></a>
+
+                    {% endif %}
+                </span>
+            </div>
+            <div class="name-msg mx-1">
+                <div class="msg position-relative">
+                    <p>{{ post.body }}</p>
+                    <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                </div>
+            </div>
+            <div class="more-options">
+
+            </div>
+        </div>
+        <div class="image-video">
+            <img src="" alt="">
+        </div>
+        <div class="your-reaction">
+            <div class="comment"><i class="fa fa-comment-o"></i></div>
+            <div class="retweet" style="display: flex !important;"><i class="fa fa-retweet"></i></div>
+            <div class="like">
+                <form method="POST" action="{% url 'like' post.pk %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit" style="background-color: transparent; border: none; box-shadow: none;">
+                        <i class="like fa fa-heart-o"></i>
+                        <span>{{ post.likes.all.count }} </span>
+                    </button>
+                </form>
+            </div>
+            <div class="bookmark"><i class="fa fa-upload"></i></div>
+        </div>
+
+    </div>
+
+    <!-- End Tweet  -->
+
+    <div class="you-tweet-other-tweet">
+        <div class="your-tweet" style="border-bottom:12px solid #f7f9f9; padding-bottom: 8px">
+            <div class="profile-message">
+                <span><img src="{{ user.profile.picture.url }}" alt=""></span>
+                <form method="POST" style="position: relative; z-index: 9999;">
+                    {% csrf_token %}
+                    {{ form|crispy}}
+            </div>
+            <div class="add-extra">
+                <div class="images-more">
+                    <span><a href=""><i class="far fa-image"></i></a></span>
+                    <span><a href=""><i class="fas fa-poll-h"></i></a></span>
+                    <span><a href=""><i class="far fa-smile"></i></a></span>
+                    <span><a href=""><i class="far fa-calendar-plus"></i></a></span>
+                </div>
+                <span style="position: relative; z-index: 9999;"><button>Reply</button></span>
+            </div>
+            </form>
+        </div>
+        <div class="others-tweets">
+            {% for comment in comments%}
+            <div class="other-tweet">
+                {% if comment.is_parent %}
+
+                <!-- Each person -->
+                <!-- <div class="other-tweet"> -->
+                <div>
+                    <div class="others-profile profile-msg mx-2 px-1" style="margin-top: 5px;">
+                        <img src="{{ comment.author.profile.picture.url }}" alt="">
+                        <span style="padding-top: 15px">
+                            <p><a style="text-decoration: none; color: rgb(98, 98, 98)"
+                                    href="{% url 'profile' comment.author.profile.pk %}">@{{ comment.author }} .
+                                </a><a href="{% url 'post-detail' post.pk %}"
+                                    style="text-decoration: none; color:rgb(98, 98, 98);">{{comment.created_on}}</a>
+                            </p>
+                        </span>
+                        <span>
+                            {% if request.user == comment.author %}
+
+                            <a class="mx-1 pr-2" href="{% url 'comment-delete' post.pk comment.pk %}"
+                                style="color: rgb(170, 60, 60);"><i class="fas fa-trash"></i></a>
+
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="name-msg mx-1">
+                        <div class="msg position-relative">
+                            <p>{{ comment.comment }}</p>
+                            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                        </div>
+                    </div>
+                    <div class="more-options">
+                    </div>
+                </div>
+                <div class="image-video">
+                    <img src="" alt="">
+                </div>
+                <div class="your-reaction">
+                    <div class="comment">
+                        <button class="remove-default-btn" style="border: none; background: none">
+                            <i class="comment fa fa-comment-o" onclick="commentReplyToggle('{{ comment.pk }}')"></i>
+                        </button>
+                    </div>
+                    <div class="retweet" style="display: flex !important;"><i class="fa fa-retweet"></i></div>
+                    <div class="like">
+                        <form method="POST" action="{% url 'comment-like' post.pk comment.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <button type="submit"
+                                style="background-color: transparent; border: none; box-shadow: none;">
+                                <i class="like fa fa-heart-o"></i>
+                                <span>{{ comment.likes.all.count }} </span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="bookmark"><i class="fa fa-upload"></i></div>
+                </div>
+                <!-- For reply on comment -->
+                <div class="comment your-tweet d-none" id="{{ comment.pk }}"
+                    style="border-bottom:12px solid #f7f9f9; padding-bottom: 8px">
+                    <div class="profile-message">
+                        <span><img src="{{ user.profile.picture.url }}" alt=""></span>
+                        <form method="POST" action="{% url 'comment-reply' post.pk comment.pk %}"
+                            style="position: relative; z-index: 9999;">
+                            {% csrf_token %}
+                            {{ form|crispy}}
+                    </div>
+
+                    <div class="add-extra">
+                        <div class="images-more">
+                            <span><a href=""><i class="far fa-image"></i></a></span>
+                            <span><a href=""><i class="fas fa-poll-h"></i></a></span>
+                            <span><a href=""><i class="far fa-smile"></i></a></span>
+                            <span><a href=""><i class="far fa-calendar-plus"></i></a></span>
+                        </div>
+                        <span style="position: relative; z-index: 9999;"><button>Reply</button></span>
+                    </div>
+                    </form>
+                </div>
+
+                <!-- </div> -->
+                <!-- End of Each person -->
+                {% for child_comment in comment.children %}
+                <!-- <div class="other-tweet"> -->
+                <div class="child ms-5 ps-3 other-tweet1">
+                    <div class="others-profile profile-msg1 mx-2 px-1" style="margin-top: 5px;">
+                        <img src="{{ child_comment.author.profile.picture.url }}" alt="">
+                        <span class="ps-3" style="padding-top: 15px">
+                            <p><a style="text-decoration: none; color: rgb(98, 98, 98)"
+                                    href="{% url 'profile' child_comment.author.profile.pk %}">@
+                                    {{ child_comment.author }} .
+                                </a><a href="{% url 'post-detail' post.pk %}"
+                                    style="text-decoration: none; color:rgb(98, 98, 98);">{{child_comment.created_on}}</a>
+                            </p>
+                        </span>
+                        <span>
+                            {% if request.user == child_comment.author %}
+
+                            <a class="mx-1 pr-2" href="{% url 'comment-delete' post.pk child_comment.pk %}"
+                                style="color: rgb(170, 60, 60);"><i class="fas fa-trash"></i></a>
+
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="name-msg mx-1">
+                        <div class="msg position-relative">
+                            <p>{{ child_comment.comment }}</p>
+                            <a href="{% url 'post-detail' post.pk %}" class="stretched-link"></a>
+                        </div>
+                    </div>
+                    <div class="more-options">
+                    </div>
+                </div>
+                <div class="image-video">
+                    <img src="" alt="">
+                </div>
+                <div class="your-reaction">
+                    <div class="comment">
+                        <button class="remove-default-btn" style="border: none; background: none">
+                            <i class="comment fa fa-comment-o" onclick="commentReplyToggle('{{ comment.pk }}')"></i>
+                        </button>
+                    </div>
+                    <div class="retweet" style="display: flex !important;"><i class="fa fa-retweet"></i></div>
+                    <div class="like">
+                        <form method="POST" action="{% url 'comment-like' post.pk child_comment.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <button type="submit"
+                                style="background-color: transparent; border: none; box-shadow: none;">
+                                <i class="like fa fa-heart-o"></i>
+                                <span>{{ child_comment.likes.all.count }} </span>
+                            </button>
+                        </form>
+                    </div>
+                    <div class="bookmark"><i class="fa fa-upload"></i></div>
+                </div>
+                <!-- For reply on comment -->
+                <div class="comment your-tweet d-none" id="{{ comment.pk }}"
+                    style="border-bottom:12px solid #f7f9f9; padding-bottom: 8px">
+                    <div class="profile-message">
+                        <span><img src="{{ user.profile.picture.url }}" alt=""></span>
+                        <form method="POST" action="{% url 'comment-reply' post.pk comment.pk %}"
+                            style="position: relative; z-index: 9999;">
+                            {% csrf_token %}
+                            {{ form|crispy}}
+                    </div>
+
+                    <div class="add-extra">
+                        <div class="images-more">
+                            <span><a href=""><i class="far fa-image"></i></a></span>
+                            <span><a href=""><i class="fas fa-poll-h"></i></a></span>
+                            <span><a href=""><i class="far fa-smile"></i></a></span>
+                            <span><a href=""><i class="far fa-calendar-plus"></i></a></span>
+                        </div>
+                        <span style="position: relative; z-index: 9999;"><button>Reply</button></span>
+                    </div>
+                    </form>
+                </div>
+                <!-- </div> -->
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+</div>
+<!-- End of Content Menu -->
+<!-- Trending Menu -->
+<div class="trending-menu">
+    <div class="trending-center">
+        <form method="GET" action="{% url 'profile-search' %}">
+            <div class="search">
+
+                <input class="form-control" type="search" placeholder="Search Twitter" name="query"
+                    value="{{ request.GET.query }}">
+                <span class="search-icon"><button
+                        style="border: none; background-color: transparent; box-shadow: none; padding-bottom: 30px;"
+                        type="submit"><i class="fa fa-search"></i></button></span>
+            </div>
+        </form>
+
+        <div class="trending">
+            <div class="header">
+                <p>What's happening</p>
+            </div>
+            <div class="trends">
+                <!-- Each Trend -->
+                <div class="trend">
+                    <div class="trend-msg">
+                        <div class="trend-name">
+                            <p>IPL 2020.live</p>
+                        </div>
+                        <div class="subject">
+                            <p>IPL: aaaaaaaaaaaaaaaaaaaaaaaa</p>
+                        </div>
+                        <div class="trendk-with">
+                            <p>trending with <a href="">#MIvsRCB</a>,<a href="">#SRHvsDC</a></p>
+                        </div>
+                    </div>
+                    <div class="trend-picture">
+                        <img src=" " alt="">
+                    </div>
+                </div>
+                <div class="show-more">
+                    <a href="">Show more</a>
+                </div>
+                <!-- End of Each Trend -->
+            </div>
+        </div>
+
+        <!-- Follow -->
+
+        <!-- End of Follow -->
+
+    </div>
+</div>
+<!-- End of Trending Menu -->
+
+</div>
+{% endblock body %}
